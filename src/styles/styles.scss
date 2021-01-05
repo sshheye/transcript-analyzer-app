@@ -1,0 +1,22 @@
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+.center-align {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+.cdk-overlay-pane {
+  top: 135px !important;
+  margin-left: -1%;
+}
+.container {
+  max-width: 1440px;
+  padding-left: 32px;
+  padding-right: 32px;
+}

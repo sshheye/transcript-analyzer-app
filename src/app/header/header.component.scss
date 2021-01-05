@@ -1,0 +1,27 @@
+.header {
+  min-width: 665px;
+  padding: 17px 32px 16px 32px;
+  background: #5a5a71;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+}
+.header-content {
+  display: inline-block;
+}
+.header-text {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 23px;
+  letter-spacing: 0.0015em;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+.header-image {
+  float: right;
+  margin-top: -5px;
+}
+.header-image img {
+  width: 34px;
+  height: 34px;
+}

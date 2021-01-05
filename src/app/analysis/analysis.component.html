@@ -1,0 +1,173 @@
+<header></header>
+
+<div class="container">
+  <div class="page-header">
+    <div class="agent-select">
+      <mat-form-field appearance="fill" [floatLabel]="'never'">
+        <span matPrefix
+          ><mat-icon class="user-icon">supervised_user_circle</mat-icon></span
+        >
+        <mat-select
+          placeholder="Agent"
+          [(ngModel)]="selectedAgent"
+          (selectionChange)="onAgentSelectionChange()"
+        >
+          <mat-option *ngFor="let agent of agents" [value]="agent">
+            {{
+              selectedAgent?.agent_id === agent.agent_id
+                ? getFirstname(agent)
+                : agent.full_name
+            }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="call-select">
+      <mat-form-field
+        appearance="fill"
+        [floatLabel]="'never'"
+        [ngClass]="{ inactive: !calls.length }"
+      >
+        <span matPrefix><mat-icon class="call-icon">call</mat-icon></span>
+        <mat-select
+          placeholder="Call"
+          [(ngModel)]="selectedCall"
+          (selectionChange)="onCallSelectionChange()"
+        >
+          <mat-option *ngFor="let call of calls" [value]="call">
+            {{ call.call_start_time | date: "dd.MM.yyyy" }}
+            <span *ngFor="let item of call.customer">{{ item.full_name }}</span>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div *ngIf="!isLoadingAnalysis && analysis">
+      <div class="matching-sensitivity-label">
+        <span class="matching-sensitivity-text">MATCHING SENSITIVITY</span>
+      </div>
+      <div class="matching-sensitivity-slider">
+        <mat-slider
+          min="1"
+          max="100"
+          step="1"
+          value="matchingSensitivity"
+          [(ngModel)]="matchingSensitivity"
+          (ngModelChange)="onMatchingSensitivitySliderChange()"
+        >
+        </mat-slider>
+      </div>
+      <div class="matching-sensitivity-count">
+        <span class="card-title-text">{{ matchingSensitivity }}%</span>
+      </div>
+    </div>
+  </div>
+  <div class="page-content" *ngIf="!isLoadingAnalysis && analysis">
+    <table>
+      <div class="card offset">
+        <div class="card-header">
+          <div class="card-title-1">
+            <span>Real</span>
+          </div>
+          <div class="card-title-2">
+            <span>{{ percentageTranscriptMatch }}%</span>
+          </div>
+          <div class="card-title-3">
+            <pie-chart [value]="percentageTranscriptMatch"> </pie-chart>
+          </div>
+        </div>
+        <div class="card-table-header">
+          <tr>
+            <th class="table-row-1">Time</th>
+            <th class="table-row-2">Speaker</th>
+            <th class="table-row-3">Sentence</th>
+          </tr>
+          <tr class="table-divider"></tr>
+        </div>
+        <div class="card-content" (scroll)="onScroll($event)">
+          <tr
+            *ngFor="let transcript of transcripts"
+            (mouseover)="onTranscriptMouseOver($event, transcript)"
+          >
+            <td class="table-row-1">
+              {{ convertMinutesToTime(transcript.timeFrom) }}
+            </td>
+            <td class="table-row-2">
+              {{ getSpeakerByChannelNo(transcript.channel) }}
+            </td>
+            <td
+              class="table-row-3"
+              [ngClass]="{
+                highlighted2: transcript.channel === agentsChannel
+              }"
+            >
+              {{ transcript.sentence }}
+            </td>
+          </tr>
+        </div>
+      </div>
+    </table>
+    <table>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title-1">
+            <span>Expected</span>
+          </div>
+          <div class="card-title-2">
+            <span>{{ percentageScriptMatch }}%</span>
+          </div>
+          <div class="card-title-3">
+            <pie-chart [value]="percentageScriptMatch"> </pie-chart>
+          </div>
+        </div>
+        <div class="card-table-header">
+          <tr>
+            <th class="table-row-1">Line</th>
+            <th class="table-row-2">Speaker</th>
+            <th class="table-row-3">Sentence</th>
+          </tr>
+          <tr class="table-divider"></tr>
+        </div>
+        <div class="card-content" (scroll)="onScroll($event)">
+          <tr *ngFor="let script of scripts">
+            <td class="table-row-1">
+              {{ script.order + scriptSerialNoOffset }}
+            </td>
+            <td class="table-row-2">Rep</td>
+            <td
+              class="table-row-3"
+              [ngClass]="{
+                highlighted: script.similarity === highlightedScript
+              }"
+              class="highlighted2"
+            >
+              {{ script.sentence }}
+            </td>
+          </tr>
+        </div>
+      </div>
+    </table>
+  </div>
+  <div class="empty-state-content" *ngIf="!analysis">
+    <div class="center-align">
+      <img
+        class="empty-state-image"
+        src="assets/empty_state.svg"
+        alt="Empty State Image"
+      />
+    </div>
+    <div class="center-align">
+      <span class="selection-pending-text">Selection pending</span>
+    </div>
+    <div class="center-align">
+      <span class="selection-pending-subtext">
+        Select a call from top menu and a transcript analysis will be shown here
+      </span>
+    </div>
+  </div>
+</div>
+
+<div class="tooltip" [ngStyle]="transcriptToolTipStyles">
+  <div class="tooltip-message">
+    {{ transcriptToolTipMessage }}
+  </div>
+</div>

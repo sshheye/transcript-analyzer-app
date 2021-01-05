@@ -1,0 +1,35 @@
+@import "~@angular/material/theming";
+@import "custom-theme-variables.scss";
+@include mat-core();
+
+$my-primary-palette: (
+  default: $primary-color,
+  darker: $darker-color,
+  lighter: $lighter-color,
+  contrast: (
+    primary: white,
+    darker: white,
+    light: white,
+  ),
+);
+
+$analyzer-app-primary: mat-palette(
+  $my-primary-palette,
+  default,
+  lighter,
+  darker
+);
+
+$analyzer-app-accent: mat-palette($my-primary-palette, default, light, darker);
+$analyzer-app-warn: mat-palette($mat-red);
+$analyzer-app-theme: mat-light-theme(
+  (
+    color: (
+      primary: $analyzer-app-primary,
+      accent: $analyzer-app-accent,
+      warn: $analyzer-app-warn,
+    ),
+  )
+);
+
+@include angular-material-theme($analyzer-app-theme);

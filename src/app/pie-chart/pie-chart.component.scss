@@ -1,0 +1,13 @@
+@import "custom-theme-variables.scss";
+:host ::ng-deep .mat-progress-spinner circle,
+.mat-spinner circle {
+  stroke: $primary-color;
+}
+
+.container {
+  border-radius: 12px;
+  background-color: rgba($darker-color, 0.12);
+  width: 24px;
+  padding: 1px 0px 0px 1px;
+  height: 24px;
+}
